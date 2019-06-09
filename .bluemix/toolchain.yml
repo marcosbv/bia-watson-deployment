@@ -1,0 +1,41 @@
+version: '2'
+messages:
+template:
+  name: "Watson Assistant Deployment"
+  description:
+  header: 
+  icon: 
+  required:
+    - sample-build
+  info:
+    git url: >-
+      [https://github.com/marcosbv/bia-watson-deployment](https://github.com/marcosbv/bia-watson-deployment)
+    git branch: >-
+      [master](https://github.com/marcosbv/bia-watson-deployment/tree/master)
+toolchain:
+  name: 'bia-watson-deployment-{{timestamp}}'
+  template:
+    getting_started:
+services:
+  sample-build:
+    service_id: pipeline
+    parameters:
+      name: 'bia-watson-pipeline'
+      ui-pipeline: true
+      configuration:
+        content:
+          $text: pipeline.yml
+        env:
+          WORKSPACE_NAME: '{{form.pipeline.parameters.workspace-name}}' 
+          API_KEY_DEV:    '{{form.pipeline.parameters.api-key-dev}}'
+          API_URL:        '{{form.pipeline.parameters.api-url}}'
+          API_BASE_URLS:  '{{form.pipeline.parameters.api-base-urls}}'
+          API_KEYS:       '{{form.pipeline.parameters.api-keys}}'
+        execute: true
+  webide:
+    service_id: orion
+form:
+  pipeline:
+    parameters:
+    schema:
+      $ref: deploy.json

@@ -1,0 +1,83 @@
+---
+defaultBaseImageVersion: 2.0
+properties:
+- name: WORKSPACE_NAME
+  value: '{{form.pipeline.parameters.workspace-name}}'
+stages:
+- name: EXPORT
+  properties: 
+  - name: API_URL
+    value: '{{form.pipeline.parameters.api-url}}'
+  - name: API_KEY_DEV
+    value: '{{form.pipeline.parameters.api-key-dev}}'
+    secure: true
+  jobs:
+  - name: ExportWorkspace
+    type: builder
+    fail_stage: true
+    artifact_dir: output
+    build_type: Shell Script
+    enable_tests: false
+    script: |
+      #!/bin/bash
+      echo "Looking for workspace with name $WORKSPACE_NAME"
+
+      curl -u "apikey":"$API_KEY_DEV" "$API_URL/v1/workspaces?version=2018-09-20" > workspaces.json
+      export SOURCE_WORKSPACE_ID=$(jq -r ".workspaces[] | select(.name == \"$WORKSPACE_NAME\") | .workspace_id" workspaces.json)
+
+      echo "Source workspace ID is $SOURCE_WORKSPACE_ID"
+
+      echo "Exporting workspace $SOURCE_WORKSPACE_ID..."
+
+      curl -u "apikey":"$API_KEY_DEV" "$API_URL/v1/workspaces/$SOURCE_WORKSPACE_ID?version=2018-09-20&export=true" > export.json
+      mkdir -p output
+
+      mv export.json ./output/
+- name: IMPORT
+  inputs:
+  - type: job
+    stage: EXPORT
+    job: ExportWorkspace 
+  properties:
+  - name: API_BASE_URLS
+    value: '{{form.pipeline.parameters.api-base-urls}}'
+    value: '{{form.pipeline.parameters.api-keys}}'
+    secure: true
+  jobs:    
+  - name: ImportWorkspace
+    type: builder
+    fail_stage: true
+    artifact_dir: output
+    build_type: Shell Script
+    enable_tests: false
+    script: |
+      #!/bin/bash
+      declare -a API_KEY_TRG
+      j=0
+      for API_KEY in $API_KEYS
+      do
+         API_KEY_TRG[j]=$API_KEY
+         j=$(( j + 1 ))
+      done
+
+      API_KEY_TRG=($API_KEYS)
+      i=0
+      for API_BASE_URL in $API_BASE_URLS
+      do
+          echo "Looking for workspace with name $WORKSPACE_NAME at $API_BASE_URL" 
+          curl -u "apikey":"${API_KEY_TRG[$i]}" "$API_BASE_URL/v1/workspaces?version=2018-09-20" > workspaces.json
+          export TARGET_WORKSPACE_ID=$(jq -r ".workspaces[] | select(.name == \"$WORKSPACE_NAME\") | .workspace_id" workspaces.json)
+
+          if [ -z "$TARGET_WORKSPACE_ID" ]
+          then
+             echo "Workspace with name $WORKSPACE_NAME not found for this instance."
+             exit 1
+          fi
+
+          echo "Target workspace ID is $TARGET_WORKSPACE_ID"
+          echo "Importing workspace $TARGET_WORKSPACE_ID..."
+          
+          curl -H "Content-Type: application/json" -X POST -d @export.json -u "apikey":"${API_KEY_TRG[$i]}" "$API_BASE_URL/v1/workspaces/$TARGET_WORKSPACE_ID?version=2018-09-20"
+          i=$(( i + 1))
+      done
+      echo "Finished deploy!"
