@@ -12,7 +12,6 @@ template:
       [master](https://github.com/marcosbv/bia-watson-deployment/tree/master)
 toolchain:
   name: 'bia-watson-deployment-{{timestamp}}'
-  template:
 services:
   sample-build:
     service_id: pipeline
