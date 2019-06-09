@@ -13,9 +13,10 @@ stages:
   jobs:
   - name: ExportWorkspace
     type: builder
+    inputs: []
     fail_stage: true
     artifact_dir: output
-    build_type: Shell Script
+    build_type: shell
     enable_tests: false
     script: |
       #!/bin/bash
@@ -45,10 +46,9 @@ stages:
     secure: true
   jobs:    
   - name: ImportWorkspace
-    type: builder
+    type: tester
     fail_stage: true
-    artifact_dir: output
-    build_type: Shell Script
+    build_type: shell
     enable_tests: false
     script: |
       #!/bin/bash
