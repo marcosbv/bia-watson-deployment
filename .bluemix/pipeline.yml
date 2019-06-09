@@ -1,15 +1,14 @@
 ---
-defaultBaseImageVersion: 2.0
 properties:
 - name: WORKSPACE_NAME
-  value: '{{form.pipeline.parameters.workspace-name}}'
+  value: ${WORKSPACE_NAME}
 stages:
 - name: EXPORT
   properties: 
   - name: API_URL
-    value: '{{form.pipeline.parameters.api-url}}'
+    value: ${API_URL}
   - name: API_KEY_DEV
-    value: '{{form.pipeline.parameters.api-key-dev}}'
+    value: ${API_KEY_DEV}
     secure: true
   jobs:
   - name: ExportWorkspace
@@ -40,8 +39,9 @@ stages:
     job: ExportWorkspace 
   properties:
   - name: API_BASE_URLS
-    value: '{{form.pipeline.parameters.api-base-urls}}'
-    value: '{{form.pipeline.parameters.api-keys}}'
+    value: ${API_BASE_URLS}
+  - name: API_KEYS
+    value: ${API_KEYS}
     secure: true
   jobs:    
   - name: ImportWorkspace
