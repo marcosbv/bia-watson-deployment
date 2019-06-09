@@ -3,8 +3,6 @@ messages:
 template:
   name: "Watson Assistant Deployment"
   description: "Implementa o export/import entre workspaces do WA"
-  header: 
-  icon: 
   required:
     - sample-build
   info:
@@ -15,7 +13,6 @@ template:
 toolchain:
   name: 'bia-watson-deployment-{{timestamp}}'
   template:
-    getting_started:
 services:
   sample-build:
     service_id: pipeline
@@ -32,8 +29,6 @@ services:
           API_BASE_URLS:  '{{form.pipeline.parameters.api-base-urls}}'
           API_KEYS:       '{{form.pipeline.parameters.api-keys}}'
         execute: true
-  webide:
-    service_id: orion
 form:
   pipeline:
     parameters:
