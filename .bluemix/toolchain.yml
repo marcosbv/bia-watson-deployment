@@ -2,7 +2,7 @@ version: '2'
 messages:
 template:
   name: "Watson Assistant Deployment"
-  description:
+  description: "Implementa o export/import entre workspaces do WA"
   header: 
   icon: 
   required:
