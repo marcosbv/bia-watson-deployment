@@ -9,7 +9,7 @@ stages:
     value: ${API_URL}
   - name: API_KEY_DEV
     value: ${API_KEY_DEV}
-    secure: true
+    type: secure
   jobs:
   - name: ExportWorkspace
     type: builder
@@ -43,7 +43,7 @@ stages:
     value: ${API_BASE_URLS}
   - name: API_KEYS
     value: ${API_KEYS}
-    secure: true
+    type: secure
   jobs:    
   - name: ImportWorkspace
     type: tester
