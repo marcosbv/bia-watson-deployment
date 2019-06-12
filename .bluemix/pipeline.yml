@@ -86,7 +86,10 @@ stages:
   inputs:
   - type: job
     stage: EXPORT
-    job: ExportWorkspace 
+    job: ExportWorkspace
+  triggers:
+  - type: stage
+    enabled: false
   properties:
   - name: API_BASE_URLS
     value: ${API_BASE_URLS}
