@@ -18,11 +18,19 @@
             "type": "string"
         },
         "api-keys": {
-            "description": "API Keys das instancias de destino (entre espacos)",
+            "description": "API Keys das instancias de Producao (entre espacos)",
             "type": "string"
         },
         "api-base-urls": {
-            "description": "URLs das instancias de destino (entre espacos)",
+            "description": "URLs das instancias de Producao (entre espacos)",
+            "type": "string"
+        },
+        "api-keys-hom": {
+            "description": "API Keys das instancias de Homologacao (entre espacos)",
+            "type": "string"
+        },
+        "api-base-urls-hom": {
+            "description": "URLs das instancias de Homologacao (entre espacos)",
             "type": "string"
         }
     },
@@ -31,7 +39,9 @@
         "api-url",
         "api-keys",
         "api-base-urls",
-        "workspace-name"
+        "workspace-name",
+        "api-keys-hom",
+        "api-base-urls-hom"
     ],
     "form": [
         {
@@ -55,13 +65,25 @@
         {
 	        "type": "string",
 	        "readonly": false,
-	        "title": "URLs das instancias de destino (entre espacos)" ,
+	        "title": "URLs das instancias de Homologacao (entre espacos)" ,
+	        "key": "api-base-urls-hom"
+        },
+        {
+	        "type": "password",
+	        "readonly": false,
+	        "title": "API Keys das instancias de Homologacao (entre espacos)" ,
+	        "key": "api-keys-hom"
+        },
+        {
+	        "type": "string",
+	        "readonly": false,
+	        "title": "URLs das instancias de Producao (entre espacos)" ,
 	        "key": "api-base-urls"
         },
         {
 	        "type": "password",
 	        "readonly": false,
-	        "title": "API Keys das instancias de destino (entre espacos)" ,
+	        "title": "API Keys das instancias de Producao (entre espacos)" ,
 	        "key": "api-keys"
         }
        
