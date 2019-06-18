@@ -20,7 +20,7 @@ stages:
     enable_tests: false
     script: |
       #!/bin/bash
-      echo "Looking for workspace with name $WORKSPACE_NAME"
+      echo "Looking for workspace with name ${WORKSPACE_NAME}-DEV"
 
       curl -u "apikey":"$API_KEY_DEV" "$API_URL/v1/workspaces?version=2018-09-20" > workspaces.json
       export SOURCE_WORKSPACE_ID=$(jq -r ".workspaces[] | select(.name == \"$WORKSPACE_NAME\") | .workspace_id" workspaces.json)
@@ -64,13 +64,13 @@ stages:
       i=0
       for API_BASE_URL in $API_BASE_URLS
       do
-          echo "Looking for workspace with name $WORKSPACE_NAME at $API_BASE_URL" 
+          echo "Looking for workspace with name ${WORKSPACE_NAME}-HOM at $API_BASE_URL" 
           curl -u "apikey":"${API_KEY_TRG[$i]}" "$API_BASE_URL/v1/workspaces?version=2018-09-20" > workspaces.json
-          export TARGET_WORKSPACE_ID=$(jq -r ".workspaces[] | select(.name == \"$WORKSPACE_NAME\") | .workspace_id" workspaces.json)
+          export TARGET_WORKSPACE_ID=$(jq -r ".workspaces[] | select(.name == \"${WORKSPACE_NAME}-HOM\") | .workspace_id" workspaces.json)
 
           if [ -z "$TARGET_WORKSPACE_ID" ]
           then
-             echo "Workspace with name $WORKSPACE_NAME not found for this instance."
+             echo "Workspace with name ${WORKSPACE_NAME}-HOM not found for this instance."
              exit 1
           fi
 
@@ -116,13 +116,13 @@ stages:
       i=0
       for API_BASE_URL in $API_BASE_URLS
       do
-          echo "Looking for workspace with name $WORKSPACE_NAME at $API_BASE_URL" 
+          echo "Looking for workspace with name ${WORKSPACE_NAME}-PROD at $API_BASE_URL" 
           curl -u "apikey":"${API_KEY_TRG[$i]}" "$API_BASE_URL/v1/workspaces?version=2018-09-20" > workspaces.json
-          export TARGET_WORKSPACE_ID=$(jq -r ".workspaces[] | select(.name == \"$WORKSPACE_NAME\") | .workspace_id" workspaces.json)
+          export TARGET_WORKSPACE_ID=$(jq -r ".workspaces[] | select(.name == \"${WORKSPACE_NAME}-PROD\") | .workspace_id" workspaces.json)
 
           if [ -z "$TARGET_WORKSPACE_ID" ]
           then
-             echo "Workspace with name $WORKSPACE_NAME not found for this instance."
+             echo "Workspace with name ${WORKSPACE_NAME}-PROD not found for this instance."
              exit 1
           fi
 
