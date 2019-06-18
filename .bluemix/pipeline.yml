@@ -64,16 +64,12 @@ stages:
       i=0
       for API_BASE_URL in $API_BASE_URLS
       do
-          echo "Looking for workspace with name ${WORKSPACE_NAME}_HOM at $API_BASE_URL" 
+          echo "Looking for workspace with name ${WORKSPACE_NAME}_HOMOL at $API_BASE_URL" 
           curl -u "apikey":"${API_KEY_TRG[$i]}" "$API_BASE_URL/v1/workspaces?version=2018-09-20" > workspaces.json
-          export TARGET_WORKSPACE_ID=$(jq -r ".workspaces[] | select(.name == \"${WORKSPACE_NAME}_HOM\") | .workspace_id" workspaces.json)
+          export TARGET_WORKSPACE_ID=$(jq -r ".workspaces[] | select(.name == \"${WORKSPACE_NAME}_HOMOL\") | .workspace_id" workspaces.json)
 
-          if [ -z "$TARGET_WORKSPACE_ID" ]
-          then
-             echo "Workspace with name ${WORKSPACE_NAME}_HOM not found for this instance."
-             exit 1
-          fi
-
+          # Replace template name into JSON
+          sed -i -e 's,'"${WORKSPACE_NAME}_DEV,${WORKSPACE_NAME}_HOMOL"',g' export.json
           echo "Target workspace ID is $TARGET_WORKSPACE_ID"
           echo "Importing workspace $TARGET_WORKSPACE_ID..."
           
@@ -119,13 +115,9 @@ stages:
           echo "Looking for workspace with name ${WORKSPACE_NAME}_PROD at $API_BASE_URL" 
           curl -u "apikey":"${API_KEY_TRG[$i]}" "$API_BASE_URL/v1/workspaces?version=2018-09-20" > workspaces.json
           export TARGET_WORKSPACE_ID=$(jq -r ".workspaces[] | select(.name == \"${WORKSPACE_NAME}_PROD\") | .workspace_id" workspaces.json)
-
-          if [ -z "$TARGET_WORKSPACE_ID" ]
-          then
-             echo "Workspace with name ${WORKSPACE_NAME}_PROD not found for this instance."
-             exit 1
-          fi
-
+          
+          # Replace template name into JSON
+          sed -i -e 's,'"${WORKSPACE_NAME}_DEV,${WORKSPACE_NAME}_PROD"',g' export.json
           echo "Target workspace ID is $TARGET_WORKSPACE_ID"
           echo "Importing workspace $TARGET_WORKSPACE_ID..."
           
